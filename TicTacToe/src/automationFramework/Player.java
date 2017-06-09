@@ -1,5 +1,7 @@
 package automationFramework;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Random;
 
 import org.openqa.selenium.By;
@@ -23,7 +25,7 @@ class Brain{ //https://users.auth.gr/kehagiat/Research/GameTheory/12CombBiblio/T
 			this.w[i] = new double[Config.BRAINDENSITY];
 			this.ix[i] = new int[Config.BRAINDENSITY];
 			
-			for(int j=0; j<Config.BRAINDENSITY; j++){
+			for(int j=0; j<Config.BRAINDENSITY; j++){ //9-27-81-27
 				this.w[i][j] = -1.2 * rand.nextDouble();
 				this.ix[i][j] = rand.nextInt(Config.BRAINSIZE);
 			}
@@ -38,7 +40,15 @@ class Brain{ //https://users.auth.gr/kehagiat/Research/GameTheory/12CombBiblio/T
 			this.act[i] = inputs[i];
 		}
 		
-		for(int i=inputs.length; i<Config.BRAINSIZE; i++){
+		int inputSize = inputs.length;
+		this.act[inputSize] = 1;
+		this.act[inputSize + 1] = 1;
+		this.act[inputSize + 2] = 1;
+		this.act[inputSize + 3] = 1;
+		this.act[inputSize + 4] = 1;
+		this.act[inputSize + 5] = 1;
+		
+		for(int i=inputSize + 6; i<Config.BRAINSIZE; i++){
 			double a = 0;
 			for(int j=0; j<Config.BRAINDENSITY; j++){
 				a += this.w[i][j] * this.act[this.ix[i][j]];
@@ -71,9 +81,49 @@ public class Player {
 
 	protected Brain brain;
 	protected int fitness; 
-	
+
 	public Player(){
 		this.brain = new Brain();
+		//this.trainBrain();
+	}
+	
+	//note it is totally terrible to do it this way...I am only doing this to test the network!
+	public void trainBrain(){
+		String fn = "training_data.txt";
+		String line;
+		
+		try{
+			FileReader fileReader = new FileReader(fn);
+			BufferedReader buffer = new BufferedReader(fileReader);
+			
+			while((line = buffer.readLine()) != null){
+				String[] data = line.split(",");
+				
+				if(data[data.length-1].equals("positive")){
+
+					double[] inputs = new double[Config.BOARDSIZE];
+					
+					for(int i=0; i<Config.BOARDSIZE; i++){
+						if(data[i].equals("x")){
+							inputs[i] = Config.PLAYER_TILE;
+						}else if(data[i].equals("o")){
+							inputs[i] = Config.CPU_TILE;
+						}else{
+							inputs[i] = Config.EMPTY_TILE;
+						}
+						//inputs[i] = Double.parseDouble(data[i]);
+					}
+					
+					this.brain.tick(inputs);
+				}
+			}
+			
+			buffer.close();
+		}catch(Exception e){
+			System.out.println("Error when training brain!");
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 	
 	public void getFitness(WebDriver driver){

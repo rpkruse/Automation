@@ -1,6 +1,13 @@
 package automationFramework;
 
-public class Main {
+/*
+ * TODO:
+ * Train the network on premade games S.T. it knows how to win
+ * Randomly train it?
+ * Make the automation faster????
+ * 
+ */
+public class Main { 
 
 	private static String OS = System.getProperty("os.name").toLowerCase();
 	
