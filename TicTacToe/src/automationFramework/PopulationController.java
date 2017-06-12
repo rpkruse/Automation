@@ -49,7 +49,7 @@ public class PopulationController extends WebController{
 					population[i] = mostFit[i];
 				}else{
 					population[i] = new Player();
-					if(rand.nextDouble() < Config.MUTATERATE1) //If we pass the mutate rate, the new spwan is based on its parents brain
+					if(rand.nextDouble() < Config.MUTATERATE1) //If we pass the mutate rate, the new spawn is based on its parents brain
 						population[i].brain.mutateBrain(population[rand.nextInt(Config.NUM_TO_KEEP_PER_GEN)].brain);
 				}
 			}

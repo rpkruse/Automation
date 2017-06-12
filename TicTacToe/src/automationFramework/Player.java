@@ -111,7 +111,6 @@ public class Player {
 						}else{
 							inputs[i] = Config.EMPTY_TILE;
 						}
-						//inputs[i] = Double.parseDouble(data[i]);
 					}
 					
 					this.brain.tick(inputs);
